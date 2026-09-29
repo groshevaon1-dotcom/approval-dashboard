@@ -154,7 +154,7 @@ const DATA={"regions": ["Владимирская область", "Волого
 let cur={reg:'all',yr:'all'};
 const $=id=>document.getElementById(id);
 const fmt=n=>n.toLocaleString('ru-RU');
-function shortLoc(s){if(!s)return '';return s.split(',').map(x=>x.trim()).filter(Boolean).filter(x=>!/^(обл|область|респ|край|м\.?р-?н|мр-?н|р-н|район|автономн|а\.?обл)/i.test(x)).join(', ');}
+function shortLoc(s){if(!s)return '';return s.split(',').map(x=>x.trim()).filter(Boolean).filter(x=>!(/^(обл|область|респ|край|м\.?р-?н|мр-?н|р-н|район|автономн|а\.?обл)/i.test(x)||/(^|\s)(район|область|обл\.?|край|респ\.?)$/i.test(x))).join(', ');}
 function tabs(){
   const t=$('tabs');const opts=[['all','Все регионы'],...DATA.regions.map(r=>[r,r])];
   t.innerHTML=opts.map(([k,l])=>`<button class="tab" role="tab" data-k="${k}" aria-selected="${k===cur.reg}">${l}</button>`).join('');
