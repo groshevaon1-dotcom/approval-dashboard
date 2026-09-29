@@ -1,6 +1,7 @@
-# Обновляет сайт: берёт свежий дашборд из папки «Торги», оборачивает в index.html и публикует на GitHub.
+﻿# Обновляет сайт: берёт свежий дашборд из папки «Торги», оборачивает в index.html и публикует на GitHub.
 $ErrorActionPreference = 'Stop'
 $repo = $PSScriptRoot
+Start-Transcript -Path "$repo\обновление.log" -Append | Out-Null
 $src  = 'D:\Мои документы\Claude\Услуги в сфере ИИ и земли\Торги\Дашборд_предв_согласования.html'
 
 $body = [IO.File]::ReadAllText($src)
@@ -14,9 +15,10 @@ if ($body -notmatch '^\s*<!doctype') {
 Set-Location $repo
 git add index.html
 git diff --cached --quiet
-if ($LASTEXITCODE -eq 0) { Write-Host 'Дашборд не изменился — публиковать нечего.'; exit 0 }
+if ($LASTEXITCODE -eq 0) { Write-Host 'Дашборд не изменился — публиковать нечего.'; Stop-Transcript | Out-Null; exit 0 }
 
 $date = (Get-Item $src).LastWriteTime.ToString('dd.MM.yyyy')
 git commit -q -m "Обновление данных от $date"
 git push -q origin main
 Write-Host "Готово: сайт обновлён (данные от $date)."
+Stop-Transcript | Out-Null
